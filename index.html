@@ -19,7 +19,7 @@
       <div id="unity-warning"> </div>
       <div id="unity-footer">
         <div id="unity-webgl-logo"></div>
-        <button id="custom-fullscreen-button" onclick="enterFullScreen()">Go Full Screen</button>
+        <div id="unity-fullscreen-button"></div>
         <div id="unity-build-title">כישוף של אגדה</div>
       </div>
     </div>
@@ -32,6 +32,12 @@
       var fullscreenButton = document.querySelector("#unity-fullscreen-button");
       var warningBanner = document.querySelector("#unity-warning");
 
+      // Shows a temporary message banner/ribbon for a few seconds, or
+      // a permanent error message on top of the canvas if type=='error'.
+      // If type=='warning', a yellow highlight color is used.
+      // Modify or remove this function to customize the visually presented
+      // way that non-critical warnings and error messages are presented to the
+      // user.
       function unityShowBanner(msg, type) {
         function updateBannerVisibility() {
           warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
@@ -95,22 +101,11 @@
       };
       document.body.appendChild(script);
 
-      // Full-screen function
-      function enterFullScreen() {
-        if (canvas.requestFullscreen) {
-          canvas.requestFullscreen();
-        } else if (canvas.webkitRequestFullscreen) {
-          canvas.webkitRequestFullscreen();
-        } else if (canvas.msRequestFullscreen) {
-          canvas.msRequestFullscreen();
-        }
-      }
-
-      // Full-screen shortcut: press "F"
-      document.addEventListener("keydown", function(event) {
-        if (event.key === "f" || event.key === "F") {
-          enterFullScreen();
-        }
+      // Add an event listener to trigger full-screen mode on any click
+      document.addEventListener("click", () => {
+        canvas.requestFullscreen().catch(err => {
+          console.warn("Full screen request was blocked: " + err.message);
+        });
       });
     </script>
   </body>
