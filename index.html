@@ -19,7 +19,7 @@
       <div id="unity-warning"> </div>
       <div id="unity-footer">
         <div id="unity-webgl-logo"></div>
-        <div id="unity-fullscreen-button"></div>
+        <button id="custom-fullscreen-button" onclick="enterFullScreen()">Go Full Screen</button>
         <div id="unity-build-title">כישוף של אגדה</div>
       </div>
     </div>
@@ -89,18 +89,29 @@
           fullscreenButton.onclick = () => {
             unityInstance.SetFullscreen(1);
           };
-
-          // Trigger full-screen mode after 20 seconds
-          setTimeout(() => {
-            canvas.requestFullscreen().catch(err => {
-              console.warn("Full screen request was blocked: " + err.message);
-            });
-          }, 20000); // 20 seconds
         }).catch((message) => {
           alert(message);
         });
       };
       document.body.appendChild(script);
+
+      // Full-screen function
+      function enterFullScreen() {
+        if (canvas.requestFullscreen) {
+          canvas.requestFullscreen();
+        } else if (canvas.webkitRequestFullscreen) {
+          canvas.webkitRequestFullscreen();
+        } else if (canvas.msRequestFullscreen) {
+          canvas.msRequestFullscreen();
+        }
+      }
+
+      // Full-screen shortcut: press "F"
+      document.addEventListener("keydown", function(event) {
+        if (event.key === "f" || event.key === "F") {
+          enterFullScreen();
+        }
+      });
     </script>
   </body>
 </html>
