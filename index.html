@@ -19,15 +19,17 @@
       <div id="unity-warning"> </div>
       <div id="unity-footer">
         <div id="unity-webgl-logo"></div>
+        <div id="unity-fullscreen-button"></div>
         <div id="unity-build-title">כישוף של אגדה</div>
       </div>
     </div>
-
+    
     <script>
       var container = document.querySelector("#unity-container");
       var canvas = document.querySelector("#unity-canvas");
       var loadingBar = document.querySelector("#unity-loading-bar");
       var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
       var warningBanner = document.querySelector("#unity-warning");
 
       function unityShowBanner(msg, type) {
@@ -68,6 +70,7 @@
         document.getElementsByTagName('head')[0].appendChild(meta);
         container.className = "unity-mobile";
         canvas.className = "unity-mobile";
+
         unityShowBanner('WebGL builds are not supported on mobile devices.');
       } else {
         canvas.style.width = "960px";
@@ -83,12 +86,16 @@
           progressBarFull.style.width = 100 * progress + "%";
         }).then((unityInstance) => {
           loadingBar.style.display = "none";
-          // Attempt full screen after the Unity instance loads
+          fullscreenButton.onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };
+
+          // Trigger full-screen mode after 20 seconds
           setTimeout(() => {
             canvas.requestFullscreen().catch(err => {
               console.warn("Full screen request was blocked: " + err.message);
             });
-          }, 500); // Short delay after loading completes
+          }, 20000); // 20 seconds
         }).catch((message) => {
           alert(message);
         });
